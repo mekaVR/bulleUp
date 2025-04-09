@@ -60,6 +60,7 @@ class Author(models.Model):
     biography = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(blank=True, null=True)
     social_links = models.JSONField(blank=True, null=True)
+    comic_book = models.ManyToManyField('Author', through='ComicBookAuthor')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}" if self.first_name else self.last_name

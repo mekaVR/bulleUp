@@ -25,7 +25,6 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
 
 
 class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
-    queryset = ComicBook.objects.all()
     serializer_class = ComicBookListSerializer
     detail_serializer_class = ComicBookDetailSerializer
 
@@ -33,3 +32,14 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return ComicBook.objects.prefetch_related('comicbookauthor_set')
         return ComicBook.objects.all()
+
+
+class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
+    #queryset = Author.objects.all()
+    serializer_class = AuthorListSerializer
+    detail_serializer_class = AuthorDetailSerializer
+
+    def get_queryset(self):
+        if self.action == 'retrieve':
+            return Author.objects.prefetch_related('comicbookauthor_set')
+        return Author.objects.all()
