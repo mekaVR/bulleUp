@@ -8,7 +8,7 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'users', UsersViewSet)
-router.register(r'comic-book', ComicBookViewSet)
+router.register(r'comic-book', ComicBookViewSet, basename='comic-book')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
