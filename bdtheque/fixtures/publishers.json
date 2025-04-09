@@ -1,0 +1,62 @@
+[
+  {
+    "model": "bdtheque.publisher",
+    "pk": 1,
+    "fields": {
+      "name": "Dargaud",
+      "description": "One of the largest French comic book publishers",
+      "social_links": {
+        "website": "https://www.dargaud.com",
+        "twitter": "@Dargaud"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.publisher",
+    "pk": 2,
+    "fields": {
+      "name": "Dupuis",
+      "description": "Belgian comic book publisher",
+      "social_links": {
+        "website": "https://www.dupuis.com",
+        "twitter": "@Dupuis"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.publisher",
+    "pk": 3,
+    "fields": {
+      "name": "Rue de sèvres",
+      "description": "Rue de Sèvres est une maison d’édition indépendante, créée en 2013.\nNos livres sont imprimés en France et en Belgique, sur des papiers issus de forêts durablement gérées.",
+      "social_links": {
+        "website": "https://www.dupuis.com",
+        "twitter": "@Dupuis"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.publisher",
+    "pk": 4,
+    "fields": {
+      "name": "Casterman",
+      "description": "Les éditions Casterman, fondées en 1777, ont évolué pour répondre aux attentes éditoriales de leur époque.\n\nLe catalogue actuel s’est construit autour de Tintin et de Martine, deux œuvres plébiscitées sur toute la planète, autant par les enfants que par leurs parents. En complément de ces prestigieux piliers, Casterman publie, tant en littérature Jeunesse qu’en Bandes dessinées, de grandes séries classiques (Alix, Corto Maltese, les Cités Obscures, Martine, Ernest et Célestine ou Émilie) et des sagas innovantes (Lastman, UW2, Cherub ou Bodyguard).",
+      "social_links": {
+        "website": "https://www.dupuis.com",
+        "twitter": "@Dupuis"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.publisher",
+    "pk": 5,
+    "fields": {
+      "name": "Ankama",
+      "description": "Ankama Éditions est une filiale de la société Ankama créée en octobre 2006[2] spécialisée dans l'édition.",
+      "social_links": {
+        "website": "https://www.dupuis.com",
+        "twitter": "@Dupuis"
+      }
+    }
+  }
+]

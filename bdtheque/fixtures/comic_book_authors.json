@@ -1,0 +1,29 @@
+[
+  {
+    "model": "bdtheque.comicbookauthor",
+    "pk": 1,
+    "fields": {
+      "comic_book": 1,
+      "authors": 1,
+      "role": "author"
+    }
+  },
+  {
+    "model": "bdtheque.comicbookauthor",
+    "pk": 2,
+    "fields": {
+      "comic_book": 3,
+      "authors": 1,
+      "role": "writer"
+    }
+  },
+  {
+    "model": "bdtheque.comicbookauthor",
+    "pk": 3,
+    "fields": {
+      "comic_book": 3,
+      "authors": 2,
+      "role": "illustrator"
+    }
+  }
+]

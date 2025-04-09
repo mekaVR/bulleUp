@@ -1,0 +1,87 @@
+[
+  {
+    "model": "bdtheque.comicbook",
+    "pk": 1,
+    "fields": {
+      "title": "La Belle Mort",
+      "ean": "9791033504566",
+      "genre": "science-fiction",
+      "category": "bd-adulte",
+      "series": null,
+      "volume": 1,
+      "publication_date": "1960-01-01",
+      "rating": 4.8,
+      "book_format": "144 pages, hardcover",
+      "summary": "C'est comme ce film, là tu vois : des insectes géants envahissent la terre, et il reste plus qu'un petit groupe de survivants.",
+      "publisher": 5
+    }
+  },
+  {
+    "model": "bdtheque.comicbook",
+    "pk": 2,
+    "fields": {
+      "title": "PTSD",
+      "ean": "9791033530459",
+      "genre": "science-fiction",
+      "category": "bd-adulte",
+      "series": null,
+      "volume": 1,
+      "publication_date": "1961-10-29",
+      "rating": 4.9,
+      "book_format": "208 pages, hardcover",
+      "summary": "Ancienne tireuse d'élite dans une guerre fictive passée, Jun se retrouve maintenant sans-abri et en colère, comme beaucoup d'autres vétérans. Brisée physiquement et mentalement, hantée par ses souvenirs, elle n'accepte l'aide de personne. Si la drogue semble être la seule chose l'aidant à atténuer sa douleur, les gangs qui contrôlent les vétérans en leur fournissant des médicaments sont endémiques. Jun se retrouve alors au milieu d'une autre guerre qu'elle tente de mener seule.",
+      "publisher": 2
+    }
+  },
+  {
+    "model": "bdtheque.comicbook",
+    "pk": 3,
+    "fields": {
+      "title": "Shin Zero T1",
+      "ean": "9782810209651",
+      "genre": "science-fiction",
+      "category": "bd-adulte",
+      "series": "shin zero",
+      "volume": 1,
+      "publication_date": "1961-10-29",
+      "rating": 4.9,
+      "book_format": "208 pages, hardcover",
+      "summary": "Il y a 20 ans, le dernier Kaiju, monstre géant venu des mers, a été vaincu par les Sentai, un groupe de justiciers colorés. Aujourd'hui, les Sentai ne sont plus que l'ombre d'eux-mêmes, relégués à des petits boulots mal payés. Warren, Nikki, Heloïse, Satoshi et Sofia essayent de trouver leur place dans ce monde désabusé, où les héros ont disparu.",
+      "publisher": 3
+    }
+  },
+  {
+    "model": "bdtheque.comicbook",
+    "pk": 4,
+    "fields": {
+      "title": "Le Goût du chlore",
+      "ean": "9782203012165",
+      "genre": "roman-graphique",
+      "category": "bd-adulte",
+      "series": null,
+      "volume": 1,
+      "publication_date": "1961-10-29",
+      "rating": 4.9,
+      "book_format": "135 pages, hardcover",
+      "summary": "C’est une histoire toute simple, d’une rare sobriété. Parce qu’il souffre du dos, un très jeune homme, dont au final on ne saura pratiquement rien de plus, se met à fréquenter une piscine sur les recommandations insistantes de son kinésithérapeute. Là, dans le bassin à la fois anonyme et rassurant où les individus ne sont plus que des corps qui nagent, au rythme monotone des longueurs ajoutées les unes aux autres, il fait la connaissance d’une jeune fille au corps et au sourire séduisants. C’est l’épanouissement de leur relation ténue, toute en silences, en esquives, en pudeur et en gestes esquissés, que va raconter Le Goût du chlore, avec une grande légèreté et un sens remarquable de la narration en images...",
+      "publisher": 4
+    }
+  },
+  {
+    "model": "bdtheque.comicbook",
+    "pk": 5,
+    "fields": {
+      "title": "Pour L'Empire - Tome 1 - L'Honneur",
+      "ean": "9782205063097",
+      "genre": "fantastique",
+      "category": "bd-adulte",
+      "series": "Pour L'Empire",
+      "volume": 1,
+      "publication_date": "1961-10-29",
+      "rating": 4.9,
+      "book_format": "48 pages, hardcover",
+      "summary": "L'Empire est à son apogée, aucune armée ne saurait lui faire face et toutes les terres connues sont désormais sous sa domination après la chute de l'armée du Moyen-Orient et sa mise à sac. Mais les soldats risquent de sombrer dans l'ennui et la lassitude de la victoire facile et l'Empereur décide d'envoyer la troupe d'élite loin, plus loin que le désert, à la recherche du bastion Omega coupé de sa base depuis des années. C'est là que la redoutable légion va finalement rencontrer le doute, l'obstination, la fraternité, la souffrance des corps et des âmes mais aussi la peur... Une trilogie étonnante qui revisite de façon moderne le péplum fantastique à la sauce Poisson Pilote. Inutile de se fier aux repères historiques, volontairement mis à mal par Merwan Chabane et Bastien Vivès, grande révélation de ces dernières années. Une odyssée singulière et innovante",
+      "publisher": 1
+    }
+  }
+]

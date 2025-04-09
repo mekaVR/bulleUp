@@ -1,0 +1,77 @@
+[
+  {
+    "model": "bdtheque.author",
+    "pk": 1,
+    "fields": {
+      "last_name": "Bablet",
+      "first_name": "Mathieu",
+      "biography": "Né en 1987, Mathieu Bablet est fan de films d’horreurs et de séries B. Fraîchement diplômé de l’ENAAI de Chambéry (enseignement aux arts appliqués & à l’image), il envoie le dossier de présentation de sa première BD à Ankama Éditions. Son one-shot post-apocalyptique, La Belle Mort, est immédiatement repéré par Run en 2011, qui lui propose de le publier sous son label 619. S’en suit en 2013 l’époustouflante fable mythologique Adrastée publiée en deux tomes puis en intégrale en 2016. La même année arrive le phénomène SF Shangri-La (75000 exemplaires vendus, GFK) sélectionné en 2017 au festival d’Angoulême. En 2018, friand d’un projet collectif, il lance en maître d’œuvre la série fantastique Midnight Tales, série fantastique dont quatre tomes sont actuellement disponibles chez Ankama Editions, et qui se prolongera avec The Midnight Order chez Rue de Sèvres. \nEn 2020, il sort, toujours au Label 619, son nouveau one-shot de SF Carbone & Silicium, lauréat du prix BD Fnac-France Inter.",
+      "social_links": {
+        "instagram": "https://www.instagram.com/mathieubablet/",
+        "twitter": "https://twitter.com/MathieuBablet",
+        "twitch": "https://www.twitch.tv/mathieubablet"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.author",
+    "pk": 2,
+    "fields": {
+      "last_name": "Singelin",
+      "first_name": "Guillaume",
+      "biography": "Jeune auteur talentueux, Guillaume Singelin est le chef de file d’une nouvelle vague de dessinateurs qui réoxygènent la BD européenne.Très présent sur le net, il est remarqué par le directeur éditorial du Label 619 Run, qui lui propose en 2009 d’intégrer l’équipe de préproduction du long métrage Mutafukaz chez Ankama, après un galop d’essai sur le trailer de Mutafukaz tome 0.\nDéjà reconnu pour ses qualités de dessinateur, Guillaume excelle dans la narration, domaine où son aisance graphique sublime l’originalité de ses découpages. C'est en 2011 que débute l'aventure The Grocery avec Aurélien Ducoudray, géniale fresque urbaine en cinq tomes mettant en scène le gang des cornerboys de Baltimore. En parallèle, il travaille aussi sur plusieurs numéros DoggyBags pour le Label 619. En 2019, on le retrouve au dessin et au scénario du one-shot P.T.S.D publié aux US par First Second et en France par Ankama au Label 619. Graphiquement magnifique, P.T.S.D. (post-traumatic stress disorder), en français « E.S.P.T. : état de stress post-traumatique », fait face à la réalité des vétérans de guerre qui doivent tenter de surmonter leur traumatisme à leur retour, sans aucune aide...\nIl publie en 2023 un nouveau one-shot : Frontier, chez Rue de Sèvres.",
+      "social_links": {
+        "instagram": "https://www.instagram.com/blackysan/",
+        "twitter": "https://x.com/guinoir"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.author",
+    "pk": 3,
+    "fields": {
+      "last_name": "Guarnido",
+      "first_name": "Juanjo",
+      "biography": "Juanjo Guarnido est un dessinateur de bandes dessinées.\n\nAprès une enfance passée à dessiner, il fait ses études aux Beaux-Arts à Grenade et y obtient son diplôme. Il participe à la conception de plusieurs fanzines et publie des illustrations chez Comics Forum - Planeta de Agostini pour l'édition espagnole de Marvel Comics.\n\nIl s'installe ensuite à Madrid où il travaille aux studios d'animation Lapiz Azul. C'est dans ce studio qu'il rencontre Juan Diaz Canales, celui qui deviendra son scénariste pour \"Blacksad\".",
+      "social_links": {
+        "website": "https://www.asterix.com"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.author",
+    "pk": 4,
+    "fields": {
+      "last_name": "Vivès",
+      "first_name": "Bastien",
+      "biography": "Bastien Vivès est né le 11 février 1984. Ce jeune auteur s’est fait remarquer sous le label KSTR avec notamment le Goût de Chlore et dernièrement avec Amitiétroite. Il prépare chez Poisson Pilote (Dargaud) l'album Pour l’Empire cosigné avec Merwann. Le T.1 est annoncé pour mars 2010. Diplômé de l’école des Gobelins (section animation), après trois années de graphisme à l'ESAG Penninghen, Bastien Vivès réalise ses premiers pas dans un atelier de bandes dessinées qu’il cofonde à Paris. Sous le pseudonyme Bastien Chanmax, il publie sur le net Poungi, « le manchot rappeur amateur de gros seins ». Il est alors découvert par le label jeunes de Casterman. KSTR publie ainsi Elle(s), en début 2007, puis Hollywood Jan avec Mickaël Sanlaville en début 2008, le Goût du Chlore salué par le public et la critique mi 2008 et Dans mes Yeux ainsi qu’Amitiétroite en 2009. Parallèlement, il sort la Boucherie chez Wraoum et Juju Mimi Féfé Chacha, un scénario d’Alexis de Raphelis chez Ankama. Il enchaine aujourd’hui avec Merwann sur une nouvelle série à quatre mains, Pour l’Empire dont vous trouverez ci-dessous la bande annonce. Dessinateur en pleine évolution graphique, Bastien Vivès fait assurément partie de la relève de la bande dessinée.",
+      "social_links": {
+        "instagram": "https://www.instagram.com/bastienvives"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.author",
+    "pk": 5,
+    "fields": {
+      "last_name": "Chabane",
+      "first_name": "Merwan",
+      "biography": "Merwan Chabane est un réalisateur de films d'animations, dessinateur et scénariste de bande dessinée français. Il publie la plupart de ses ouvrages sous le pseudonyme Merwan",
+      "social_links": {
+        "instagram": "https://www.instagram.com/merwan_chabane"
+      }
+    }
+  },
+  {
+    "model": "bdtheque.author",
+    "pk": 6,
+    "fields": {
+      "last_name": "Chabane",
+      "first_name": "Canales",
+      "biography": "Il lit très tôt de la bande dessinée avant de s'intéresser au dessin animé. C'est décidé, il en fera son métier ! À 18 ans, il intègre un studio d'animation et y rencontre Juanjo Guarnido, avec lequel il se lie d'amitié. Juan reste en Espagne alors que Juanjo part en France travailler pour les studios d'animation de Disney",
+      "social_links": {
+
+      }
+    }
+  }
+]
