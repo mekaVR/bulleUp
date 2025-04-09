@@ -75,11 +75,11 @@ class ComicBookAuthor(models.Model):
     ]
 
     comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
-    authors = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     role = models.CharField(max_length=50, choices=ROLE_CHOICE)
 
     class Meta:
-        unique_together = ('comic_book', 'authors', 'role')
+        unique_together = ('comic_book', 'author', 'role')
 
 
 class Publisher(models.Model):

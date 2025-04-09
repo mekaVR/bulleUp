@@ -83,15 +83,15 @@ class ComicBookForAuthorDetailSerializer(serializers.ModelSerializer):
 
 
 class ComicBookAuthorSerializer(serializers.ModelSerializer):
-    authors_id = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
+    author_id = serializers.PrimaryKeyRelatedField(queryset=Author.objects.all())
     author_name = serializers.SerializerMethodField()
 
     class Meta:
         model = ComicBookAuthor
-        fields = ['authors_id', 'author_name', 'role']
+        fields = ['author_id', 'author_name', 'role']
 
     def get_author_name(self, obj):
-        return f"{obj.authors.first_name} {obj.authors.last_name}" if obj.authors.first_name else None
+        return f"{obj.author.first_name} {obj.author.last_name}" if obj.author.first_name else None
 
 
 class AuthorListSerializer(serializers.ModelSerializer):

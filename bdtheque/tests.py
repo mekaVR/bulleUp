@@ -42,7 +42,7 @@ class ComicBookAPITestCase(APITestCase):
 
         ComicBookAuthor.objects.create(
             comic_book=cls.comic_book,
-            authors=cls.author,
+            author=cls.author,
             role='author'
         )
 
@@ -62,7 +62,7 @@ class ComicBookAPITestCase(APITestCase):
         authors_data = [
             {'author_name': f'{author.first_name} {author.last_name}', 'role': cb_author.role}
             for cb_author in ComicBookAuthor.objects.filter(comic_book=comic_book)
-            for author in Author.objects.filter(id=cb_author.authors.id)
+            for author in Author.objects.filter(id=cb_author.author.id)
         ]
 
         return {
