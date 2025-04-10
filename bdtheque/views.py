@@ -71,6 +71,46 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
             return ComicBook.objects.prefetch_related('comicbookauthor_set')
         return ComicBook.objects.all()
 
+    @action(detail=True, methods=['post'])
+    def add_comic_in_collection(self, request, pk=None):
+        try:
+            comic_to_add = ComicBook.objects.get(pk=pk)
+            request.user.add_comic_in_collection(pk)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez ajouter {comic_to_add.title} à votre collection"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def remove_comic_in_collection(self, request, pk=None):
+        try:
+            comic_to_remove = ComicBook.objects.get(pk=pk)
+            request.user.remove_comic_in_collection(pk)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez enlever {comic_to_remove.title} de votre collection"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def add_comic_in_wishlist(self, request, pk=None):
+        try:
+            comic_to_add = ComicBook.objects.get(pk=pk)
+            request.user.add_comic_in_wishlist(pk)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez ajouter {comic_to_add.title} à votre wishlist"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def remove_comic_in_wishlist(self, request, pk=None):
+        try:
+            comic_to_remove = ComicBook.objects.get(pk=pk)
+            request.user.remove_comic_in_wishlist(pk)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez enlever {comic_to_remove.title} de votre wishlist"},
+                        status=status.HTTP_200_OK)
+
 
 class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = AuthorListSerializer

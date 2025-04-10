@@ -5,24 +5,42 @@ from .models import *
 from authentication.models import User
 
 
+class FollowedUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
+
+
 class UserCollectionSerializer(serializers.ModelSerializer):
-    oeuvre = serializers.PrimaryKeyRelatedField(queryset=ComicBook.objects.all(), write_only=True)
-    oeuvre_title = serializers.SerializerMethodField()
+    comic_book = serializers.PrimaryKeyRelatedField(queryset=ComicBook.objects.all(), write_only=True)
+    comic_book_title = serializers.SerializerMethodField()
+    comic_book_id = serializers.SerializerMethodField()
 
     class Meta:
         model = UserCollection
-        fields = '__all__'
+        fields = ['comic_book','comic_book_title', 'comic_book_id']
 
-    def get_oeuvre_title(self, obj):
-        return obj.oeuvre.title if obj.oeuvre else None
+    def get_comic_book_title(self, obj):
+        return obj.comic_book.title if obj.comic_book else None
+
+    def get_comic_book_id(self, obj):
+        return obj.comic_book.pk
 
 
 class UserWishListSerializer(serializers.ModelSerializer):
-    oeuvre = serializers.StringRelatedField()
+    comic_book = serializers.PrimaryKeyRelatedField(queryset=ComicBook.objects.all(), write_only=True)
+    comic_book_title = serializers.SerializerMethodField()
+    comic_book_id = serializers.SerializerMethodField()
 
     class Meta:
         model = UserWishlist
-        fields = '__all__'
+        fields = ['comic_book','comic_book_title', 'comic_book_id']
+
+    def get_comic_book_title(self, obj):
+        return obj.comic_book.title if obj.comic_book else None
+
+    def get_comic_book_id(self, obj):
+        return obj.comic_book.pk
 
 
 class UserMiniSerializer(serializers.ModelSerializer):
@@ -48,9 +66,7 @@ class UserListSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     collection = UserCollectionSerializer(source='usercollection_set', many=True, read_only=True)
     wishlist = UserWishListSerializer(source='userwishlist_set', many=True, read_only=True)
-    follows = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), many=True, required=False
-    )
+    follows = FollowedUserSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(source='review_set', many=True, read_only=True)
 
     class Meta:

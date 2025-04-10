@@ -39,3 +39,11 @@ class User(AbstractUser):
     @transaction.atomic
     def remove_comic_in_collection(self, comic_to_remove):
         self.collection.remove(comic_to_remove)
+
+    @transaction.atomic
+    def add_comic_in_wishlist(self, comic_to_add):
+        self.wishlist.add(comic_to_add)
+
+    @transaction.atomic
+    def remove_comic_in_wishlist(self, comic_to_remove):
+        self.wishlist.remove(comic_to_remove)
