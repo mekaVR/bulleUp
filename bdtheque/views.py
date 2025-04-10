@@ -1,4 +1,6 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from authentication.models import User
 from .serializers import *
@@ -24,6 +26,42 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
         return User.objects.all()
 
 
+    @action(detail=True, methods=['post'])
+    def add_follower(self, request, pk=None):
+        if not request.user.is_authenticated:
+            return Response({"error": "Vous devez être connecté pour suivre un utilisateur"},
+                            status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            user_to_follow = User.objects.get(pk=pk)
+            request.user.add_follower(user_to_follow)
+        except User.DoesNotExist:
+            return Response({"error": "L'utilisateur que vous essayez de suivre n'existe pas"},
+                            status=status.HTTP_404_NOT_FOUND)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": f"Vous suivez maintenant {user_to_follow.username}"},
+                        status=status.HTTP_200_OK)
+
+
+    @action(detail=True, methods=['post'])
+    def remove_follower(self, request, pk=None):
+        if not request.user.is_authenticated:
+            return Response({"error": "Vous devez être connecté pour suivre un utilisateur"},
+                            status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            user_to_remove = User.objects.get(pk=pk)
+            request.user.remove_follower(user_to_remove)
+        except User.DoesNotExist:
+            return Response({"error": "L'utilisateur n'existe pas"},
+                            status=status.HTTP_404_NOT_FOUND)
+        except ValueError as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"message": f"Vous ne suivez plus {user_to_remove.username}"},
+                        status=status.HTTP_200_OK)
+
+
 class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = ComicBookListSerializer
     detail_serializer_class = ComicBookDetailSerializer
@@ -35,7 +73,6 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
 
 
 class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
-    #queryset = Author.objects.all()
     serializer_class = AuthorListSerializer
     detail_serializer_class = AuthorDetailSerializer
 
