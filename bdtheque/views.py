@@ -120,3 +120,8 @@ class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return Author.objects.prefetch_related('comicbookauthor_set')
         return Author.objects.all()
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer

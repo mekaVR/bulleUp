@@ -50,11 +50,19 @@ class UserMiniSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    user = UserMiniSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    user_name = serializers.SerializerMethodField()
+    comic_book_title = serializers.SerializerMethodField()
 
     class Meta:
         model = Review
         fields = '__all__'
+
+    def get_user_name(self, obj):
+        return f"{obj.user}"
+
+    def get_comic_book_title(self, obj):
+        return f"{obj.comic_book.title}"
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -138,6 +146,7 @@ class ComicBookListSerializer(serializers.ModelSerializer):
 class ComicBookDetailSerializer(serializers.ModelSerializer):
     authors = ComicBookAuthorSerializer(source='comicbookauthor_set', many=True, read_only=True)
     publisher = PublisherMiniSerializer(read_only=True)
+    reviews = ReviewSerializer(read_only=True,  many=True)
 
     class Meta:
         model = ComicBook

@@ -96,7 +96,7 @@ class Review(models.Model):
     rating = models.IntegerField(choices=[(i, i) for i in range(6)])
     summary = models.TextField(blank=True, null=True)
     user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
-    comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
+    comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE, related_name='reviews')
     publication_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

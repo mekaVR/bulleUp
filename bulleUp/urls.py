@@ -10,6 +10,7 @@ router = DefaultRouter()
 router.register(r'users', UsersViewSet)
 router.register(r'comic-book', ComicBookViewSet, basename='comic-book')
 router.register(r'author', AuthorsViewSet, basename='author')
+router.register(r'review', ReviewViewSet, basename='review')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
