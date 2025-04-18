@@ -38,7 +38,7 @@ class ComicBook(models.Model):
 
     title = models.CharField(max_length=255)
     cover_image = models.ImageField(blank=True, null=True)
-    ean = models.CharField(max_length=13, unique=True, blank=True, null=True)
+    ean = models.CharField(max_length=13, unique=True)
     genre = models.CharField(max_length=50, blank=True, choices=GENRE_CHOICE, null=True)
     category = models.CharField(max_length=50, blank=True, choices=CATEGORY_CHOICES, null=True)
     series = models.CharField(max_length=100, blank=True, null=True)
