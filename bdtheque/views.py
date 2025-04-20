@@ -157,6 +157,12 @@ class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Author.objects.all()
 
 
+class PublisherViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherMiniSerializer
+    detail_serializer_class = PublisherSerializer
+
+
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer

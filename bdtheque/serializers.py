@@ -97,7 +97,7 @@ class PublisherSerializer(serializers.ModelSerializer):
 class PublisherMiniSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'profile_picture']
 
 
 class ComicBookForAuthorDetailSerializer(serializers.ModelSerializer):
