@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, transaction
+from django.conf import settings
 
 class ComicBook(models.Model):
 
@@ -116,7 +117,8 @@ class UserWishlist(models.Model):
 
 
 class Loan(models.Model):
-    user = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='loans')
-    username = models.CharField(max_length=150, blank=True)
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE, related_name='loans')
+    username = models.CharField(max_length=150, blank=True, null=True)
+    friend = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, null=True, blank=True)
     comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
     loan_date = models.DateField(auto_now_add=True)

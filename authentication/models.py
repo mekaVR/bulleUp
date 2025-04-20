@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.contrib.auth.models import AbstractUser
 
-from bdtheque.models import ComicBook, UserCollection, UserWishlist
+from bdtheque.models import ComicBook, UserCollection, UserWishlist, Loan
 
 
 class User(AbstractUser):
@@ -14,14 +14,15 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def __str__(self):
-        return self.username
-
     def _validate_following(self, user_to_follow):
         if self.pk == user_to_follow.pk:
             raise ValueError("Vous ne pouvez pas vous suivre vous-même")
         if self.follows.filter(pk=user_to_follow.pk).exists():
             raise ValueError("Vous suivez déjà cet utilisateur")
+
+    def _validate_loan(self, comic_book):
+        if self.loans.filter(comic_book=comic_book.pk).exists():
+            raise ValueError("Vous avez déjà préte cette bande déssiné")
 
     @transaction.atomic
     def add_follower(self, user_to_follow):
@@ -47,3 +48,8 @@ class User(AbstractUser):
     @transaction.atomic
     def remove_comic_in_wishlist(self, comic_to_remove):
         self.wishlist.remove(comic_to_remove)
+
+    @transaction.atomic
+    def loan_comic_book(self, payload):
+        self._validate_loan(payload['comic_book'])
+        Loan.objects.create(**payload)

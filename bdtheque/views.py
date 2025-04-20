@@ -111,6 +111,41 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez enlever {comic_to_remove.title} de votre wishlist"},
                         status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['post'])
+    def loan_comic_book(self, request, pk=None):
+        username = request.data.get('username')
+        user_id = request.data.get('user_id')
+
+        try:
+            friend = None
+            kwargs = {
+                "comic_book": ComicBook.objects.get(pk=pk),
+                "user": request.user
+            }
+            comic_book = ComicBook.objects.get(pk=pk)
+            if user_id:
+                kwargs['friend'] = User.objects.get(pk=user_id)
+                friend = kwargs['friend'].username
+            else:
+                friend = username
+                kwargs['username'] = username
+            request.user.loan_comic_book(kwargs)
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez preté votre bd {comic_book.title} à {friend}"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['delete'])
+    def return_loan(self,request, pk=None):
+        comic_book = ComicBook.objects.get(pk=pk)
+        try:
+            Loan.objects.filter(pk=request.data['loan_id']).delete()
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez recuperer {comic_book.title}"},
+                        status=status.HTTP_200_OK)
+
+
 
 class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = AuthorListSerializer

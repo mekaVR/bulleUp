@@ -71,11 +71,17 @@ class UserListSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'avatar']
 
 
+class LoanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Loan
+        fields = '__all__'
+
 class UserDetailSerializer(serializers.ModelSerializer):
     collection = UserCollectionSerializer(source='usercollection_set', many=True, read_only=True)
     wishlist = UserWishListSerializer(source='userwishlist_set', many=True, read_only=True)
     follows = FollowedUserSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(source='review_set', many=True, read_only=True)
+    loans = LoanSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
