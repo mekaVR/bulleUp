@@ -67,6 +67,12 @@ class Author(models.Model):
         return f"{self.first_name} {self.last_name}" if self.first_name else self.last_name
 
 
+class AuthorFollow(models.Model):
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    followed_at = models.DateTimeField(auto_now_add=True)
+
+
 class ComicBookAuthor(models.Model):
     ROLE_CHOICE = [
         ('auteur', 'Auteur'),
@@ -91,6 +97,12 @@ class Publisher(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PublisherFollow(models.Model):
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+    followed_at = models.DateTimeField(auto_now_add=True)
 
 
 class Review(models.Model):

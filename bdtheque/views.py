@@ -21,10 +21,9 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         if self.action == 'retrieve':
             return User.objects.prefetch_related(
-                'review_set', 'usercollection_set', 'userwishlist_set', 'follows'
+                'review_set', 'usercollection_set', 'userwishlist_set', 'follows', 'authorfollow_set', 'publisherfollow_set'
             )
         return User.objects.all()
-
 
     @action(detail=True, methods=['post'])
     def add_follower(self, request, pk=None):
@@ -42,7 +41,6 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
 
         return Response({"message": f"Vous suivez maintenant {user_to_follow.username}"},
                         status=status.HTTP_200_OK)
-
 
     @action(detail=True, methods=['post'])
     def remove_follower(self, request, pk=None):
@@ -146,7 +144,6 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
                         status=status.HTTP_200_OK)
 
 
-
 class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = AuthorListSerializer
     detail_serializer_class = AuthorDetailSerializer
@@ -156,11 +153,51 @@ class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
             return Author.objects.prefetch_related('comicbookauthor_set')
         return Author.objects.all()
 
+    @action(detail=True, methods=['post'])
+    def follow_author(self, request, pk=None):
+        author = Author.objects.get(pk=pk)
+        try:
+            request.user.follow_author(pk)
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous suivez {author.first_name} {author.last_name}"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unfollow_author(self, request, pk=None):
+        author = Author.objects.get(pk=pk)
+        try:
+            request.user.unfollow_author(pk)
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez arrêté de suivre {author.first_name} {author.last_name}"},
+                        status=status.HTTP_200_OK)
+
 
 class PublisherViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     queryset = Publisher.objects.all()
     serializer_class = PublisherMiniSerializer
     detail_serializer_class = PublisherSerializer
+
+    @action(detail=True, methods=['post'])
+    def follow_publisher(self, request, pk=None):
+        publisher = Publisher.objects.get(pk=pk)
+        try:
+            request.user.follow_publisher(pk)
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous suivez {publisher.name}"},
+                        status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['post'])
+    def unfollow_publisher(self, request, pk=None):
+        publisher = Publisher.objects.get(pk=pk)
+        try:
+            request.user.unfollow_publisher(pk)
+        except ValueError as error:
+            return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": f"Vous avez arrêté de suivre {publisher.name}"},
+                        status=status.HTTP_200_OK)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

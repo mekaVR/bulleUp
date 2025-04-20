@@ -76,16 +76,43 @@ class LoanSerializer(serializers.ModelSerializer):
         model = Loan
         fields = '__all__'
 
+
+class AuthorFollowSerializer(serializers.ModelSerializer):
+    author_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = AuthorFollow
+        fields = ['id', 'author_name']
+
+    def get_author_name(self, obj):
+        if obj.author.first_name:
+            return f"{obj.author.first_name} {obj.author.last_name}"
+        return f"{obj.author.last_name}"
+
+
+class PublisherFollowSerializer(serializers.ModelSerializer):
+    publisher_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PublisherFollow
+        fields = ['id', 'publisher_name']
+
+    def get_publisher_name(self, obj):
+        return f"{obj.publisher.name}"
+
+
 class UserDetailSerializer(serializers.ModelSerializer):
     collection = UserCollectionSerializer(source='usercollection_set', many=True, read_only=True)
     wishlist = UserWishListSerializer(source='userwishlist_set', many=True, read_only=True)
+    authors_follow = AuthorFollowSerializer(source='authorfollow_set', many=True, read_only=True)
+    publisher_follow = PublisherFollowSerializer(source='publisherfollow_set', many=True, read_only=True)
     follows = FollowedUserSerializer(many=True, read_only=True)
     reviews = ReviewSerializer(source='review_set', many=True, read_only=True)
     loans = LoanSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'avatar', 'birth_date', 'follows', 'collection', 'wishlist', 'reviews', 'loans']
+        fields = ['id', 'username', 'email', 'avatar', 'birth_date', 'follows', 'collection', 'wishlist', 'reviews', 'loans', 'authors_follow', 'publisher_follow']
 
 
 class PublisherSerializer(serializers.ModelSerializer):
