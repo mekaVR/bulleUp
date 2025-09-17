@@ -3,4 +3,6 @@ __pycache__
 db.sqlite3
 .idea
 data
+media.DS_Store
 media
+.DS_Store
