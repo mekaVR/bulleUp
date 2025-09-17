@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -68,6 +69,12 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         if self.action == 'retrieve':
             return ComicBook.objects.prefetch_related('comicbookauthor_set')
         return ComicBook.objects.all()
+
+    @action(detail=False, methods=['get'], url_path='by-ean/(?P<ean>[^/.]+)')
+    def get_by_ean(self, request, ean=None):
+        comic_book = get_object_or_404(ComicBook, ean=ean)
+        serializer = self.get_serializer(comic_book)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def add_comic_in_collection(self, request, pk=None):
