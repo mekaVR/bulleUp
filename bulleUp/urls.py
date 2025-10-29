@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('register/', UserRegister.as_view(), name='user-register'),
+    path('register/get-user-exist/', UserRegister.get_user_exist, name='get-user-exist'),
     path('api/', include(router.urls))
 ]
 if settings.DEBUG:
