@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from authentication.models import User
+from .models import *
 from .serializers import *
 
 class MultipleSerializerMixin:

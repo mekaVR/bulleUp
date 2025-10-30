@@ -60,7 +60,11 @@ class ComicBookAPITestCase(APITestCase):
 
     def get_comic_book_detail_data(self, comic_book, author):
         authors_data = [
-            {'author_name': f'{author.first_name} {author.last_name}', 'role': cb_author.role}
+            {
+                'author_id': cb_author.author.id,
+                'author_name': f'{author.first_name} {author.last_name}',
+                'role': cb_author.role
+            }
             for cb_author in ComicBookAuthor.objects.filter(comic_book=comic_book)
             for author in Author.objects.filter(id=cb_author.author.id)
         ]
@@ -81,8 +85,10 @@ class ComicBookAPITestCase(APITestCase):
                 "publisher": {
                     "id": comic_book.publisher.id,
                     "name": comic_book.publisher.name,
+                    "profile_picture": None,
                 },
-                "authors": authors_data
+                "authors": authors_data,
+                "reviews": []
             }
 
 
