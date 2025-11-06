@@ -11,7 +11,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from bdtheque.serializers import UserCollectionSerializer, UserWishListSerializer, ReviewSerializer
-from .models import *
+from ..models import *
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(

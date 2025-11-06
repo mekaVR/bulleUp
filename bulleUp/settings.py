@@ -149,3 +149,13 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
 }
+
+# Email configuration
+# Pour le développement, utilise la console (affiche les emails dans le terminal)
+# En production, configurer avec SMTP (Gmail, SendGrid, etc.)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply@bulleup.com'
+
+# Password reset token validity (en secondes)
+# 3600 = 1 heure (plus sécurisé que le défaut de 3 jours)
+PASSWORD_RESET_TIMEOUT = 3600
