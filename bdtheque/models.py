@@ -61,7 +61,7 @@ class Author(models.Model):
     biography = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(blank=True, null=True)
     social_links = models.JSONField(blank=True, null=True)
-    comic_book = models.ManyToManyField('Author', through='ComicBookAuthor')
+    comic_book = models.ManyToManyField('ComicBook', through='ComicBookAuthor')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}" if self.first_name else self.last_name
@@ -121,11 +121,17 @@ class UserCollection(models.Model):
     comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'comic_book')
+
 
 class UserWishlist(models.Model):
     user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
     comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
     added_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'comic_book')
 
 
 class Loan(models.Model):
@@ -134,3 +140,7 @@ class Loan(models.Model):
     friend = models.ForeignKey('authentication.User', on_delete=models.SET_NULL, null=True, blank=True)
     comic_book = models.ForeignKey(ComicBook, on_delete=models.CASCADE)
     loan_date = models.DateField(auto_now_add=True)
+    returned_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('user', 'comic_book')

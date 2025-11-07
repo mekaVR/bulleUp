@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 from authentication.models import User
 from .models import *
@@ -19,6 +20,7 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
     detail_serializer_class = UserDetailSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         if self.action == 'retrieve':
@@ -27,7 +29,7 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
             )
         return User.objects.all()
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_follower(self, request, pk=None):
         if not request.user.is_authenticated:
             return Response({"error": "Vous devez être connecté pour suivre un utilisateur"},
@@ -44,7 +46,7 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
         return Response({"message": f"Vous suivez maintenant {user_to_follow.username}"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def remove_follower(self, request, pk=None):
         if not request.user.is_authenticated:
             return Response({"error": "Vous devez être connecté pour suivre un utilisateur"},
@@ -77,7 +79,7 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         serializer = self.get_serializer(comic_book)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_comic_in_collection(self, request, pk=None):
         try:
             comic_to_add = ComicBook.objects.get(pk=pk)
@@ -87,7 +89,7 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez ajouter {comic_to_add.title} à votre collection"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def remove_comic_in_collection(self, request, pk=None):
         try:
             comic_to_remove = ComicBook.objects.get(pk=pk)
@@ -97,7 +99,7 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez enlever {comic_to_remove.title} de votre collection"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_comic_in_wishlist(self, request, pk=None):
         try:
             comic_to_add = ComicBook.objects.get(pk=pk)
@@ -107,7 +109,7 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez ajouter {comic_to_add.title} à votre wishlist"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def remove_comic_in_wishlist(self, request, pk=None):
         try:
             comic_to_remove = ComicBook.objects.get(pk=pk)
@@ -117,7 +119,7 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez enlever {comic_to_remove.title} de votre wishlist"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def loan_comic_book(self, request, pk=None):
         username = request.data.get('username')
         user_id = request.data.get('user_id')
@@ -141,15 +143,26 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous avez preté votre bd {comic_book.title} à {friend}"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['delete'])
-    def return_loan(self,request, pk=None):
-        comic_book = ComicBook.objects.get(pk=pk)
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def return_loan(self, request, pk=None):
         try:
-            Loan.objects.filter(pk=request.data['loan_id']).delete()
+            loan_id = request.data.get('loan_id')
+            if not loan_id:
+                return Response({"error": "loan_id est requis"},
+                              status=status.HTTP_400_BAD_REQUEST)
+
+            # Vérifier que le prêt existe et appartient à l'utilisateur connecté
+            loan = Loan.objects.get(pk=loan_id, user=request.user)
+            comic_book = loan.comic_book
+            loan.delete()
+
+            return Response({"message": f"Vous avez récupéré {comic_book.title}"},
+                          status=status.HTTP_200_OK)
+        except Loan.DoesNotExist:
+            return Response({"error": "Prêt non trouvé ou vous n'êtes pas propriétaire de ce prêt"},
+                          status=status.HTTP_404_NOT_FOUND)
         except ValueError as error:
             return Response({"error": str(error)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"message": f"Vous avez recuperer {comic_book.title}"},
-                        status=status.HTTP_200_OK)
 
 
 class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
@@ -161,7 +174,7 @@ class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
             return Author.objects.prefetch_related('comicbookauthor_set')
         return Author.objects.all()
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def follow_author(self, request, pk=None):
         author = Author.objects.get(pk=pk)
         try:
@@ -171,7 +184,7 @@ class AuthorsViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous suivez {author.first_name} {author.last_name}"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def unfollow_author(self, request, pk=None):
         author = Author.objects.get(pk=pk)
         try:
@@ -187,7 +200,7 @@ class PublisherViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
     serializer_class = PublisherMiniSerializer
     detail_serializer_class = PublisherSerializer
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def follow_publisher(self, request, pk=None):
         publisher = Publisher.objects.get(pk=pk)
         try:
@@ -197,7 +210,7 @@ class PublisherViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
         return Response({"message": f"Vous suivez {publisher.name}"},
                         status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def unfollow_publisher(self, request, pk=None):
         publisher = Publisher.objects.get(pk=pk)
         try:

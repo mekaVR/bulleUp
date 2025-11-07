@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',  # Ajouté pour gérer les CORS
     'rest_framework',
     'rest_framework_simplejwt',
     'authentication',
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Ajouté en premier pour CORS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -141,7 +143,11 @@ MEDIA_ROOT = BASE_DIR.joinpath('media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(weeks=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),  # 1 heure (au lieu de 5 semaines)
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 7 jours
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ALGORITHM": "HS256",
 }
 
 REST_FRAMEWORK = {
@@ -159,3 +165,15 @@ DEFAULT_FROM_EMAIL = 'noreply@bulleup.com'
 # Password reset token validity (en secondes)
 # 3600 = 1 heure (plus sécurisé que le défaut de 3 jours)
 PASSWORD_RESET_TIMEOUT = 3600
+
+# Configuration CORS (pour permettre les requêtes depuis le frontend React Native)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",  # Expo dev server
+    "http://192.168.1.10:8081",  # Votre IP locale
+    "exp://192.168.1.10:8081",  # Expo protocol
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+# En développement, vous pouvez temporairement utiliser (à ne PAS garder en production):
+# CORS_ALLOW_ALL_ORIGINS = True
