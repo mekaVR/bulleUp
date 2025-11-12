@@ -21,6 +21,8 @@ from .user import (
     UserMiniSerializer,
     UserListSerializer,
     UserDetailSerializer,
+    UserProfileSerializer,
+    UserProfileUpdateSerializer,
 )
 from .review import ReviewSerializer
 from .loan import LoanSerializer
@@ -42,6 +44,8 @@ __all__ = [
     'UserMiniSerializer',
     'UserListSerializer',
     'UserDetailSerializer',
+    'UserProfileSerializer',
+    'UserProfileUpdateSerializer',
     'ReviewSerializer',
     'LoanSerializer',
 ]

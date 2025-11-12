@@ -8,6 +8,7 @@ from bdtheque.models import ComicBook, UserCollection, UserWishlist, Loan, Autho
 class User(AbstractUser):
     avatar = models.ImageField(blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
+    bio = models.CharField(max_length=150, blank=True, null=True)
     follows = models.ManyToManyField('self', symmetrical=False, related_name='followers')
     collection = models.ManyToManyField(ComicBook, through=UserCollection, related_name='collection')
     wishlist =  models.ManyToManyField(ComicBook, through=UserWishlist, related_name='wishlist')

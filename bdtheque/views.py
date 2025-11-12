@@ -1,4 +1,9 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -28,6 +33,135 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
                 'review_set', 'usercollection_set', 'userwishlist_set', 'follows', 'authorfollow_set', 'publisherfollow_set'
             )
         return User.objects.all()
+
+
+    @action(
+        detail=False,
+        methods=['get', 'patch'],
+        permission_classes=[IsAuthenticated],
+        url_path='me'
+    )
+    def me(self, request):
+        if request.method == 'GET':
+            user = User.objects.prefetch_related(
+                'usercollection_set',
+                'userwishlist_set',
+                'review_set',
+                'loans',
+                'follows',
+                'authorfollow_set',
+                'publisherfollow_set'
+            ).get(pk=request.user.pk)
+
+            serializer = UserProfileSerializer(user, context={'request': request})
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        elif request.method == 'PATCH':
+            serializer = UserProfileUpdateSerializer(
+                request.user,
+                data=request.data,
+                partial=True,
+                context={'request': request}
+            )
+
+            if serializer.is_valid():
+                serializer.save()
+
+                updated_user = User.objects.prefetch_related(
+                    'usercollection_set',
+                    'userwishlist_set',
+                    'review_set',
+                    'loans',
+                    'follows',
+                    'authorfollow_set',
+                    'publisherfollow_set'
+                ).get(pk=request.user.pk)
+
+                response_serializer = UserProfileSerializer(updated_user, context={'request': request})
+
+                return Response(
+                    {
+                        "message": "Profil mis à jour avec succès",
+                        "user": response_serializer.data
+                    },
+                    status=status.HTTP_200_OK
+                )
+
+            return Response(
+                {
+                    "error": "Données invalides",
+                    "details": serializer.errors
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return None
+
+    @action(
+        detail=False,
+        methods=['post'],
+        permission_classes=[IsAuthenticated],
+        url_path='change-password'
+    )
+    def change_password(self, request):
+        user = request.user
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        confirm_password = request.data.get('confirm_password')
+
+        if not old_password or not new_password or not confirm_password:
+            return Response(
+                {"error": "Tous les champs sont requis"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not check_password(old_password, user.password):
+            return Response(
+                {"error": "L'ancien mot de passe est incorrect"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if new_password != confirm_password:
+            return Response(
+                {"error": "Les nouveaux mots de passe ne correspondent pas"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            validate_password(new_password, user)
+        except ValidationError as e:
+            return Response(
+                {"error": "Mot de passe invalide", "details": list(e.messages)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.set_password(new_password)
+        user.save()
+
+        try:
+            send_mail(
+                subject='Mot de passe modifié - BulleUp',
+                message=f"""
+                    Bonjour {user.username},
+                    
+                    Votre mot de passe a été modifié avec succès.
+                    
+                    Si vous n'êtes pas à l'origine de cette modification, veuillez contacter immédiatement notre support.
+                    
+                    Cordialement,
+                    L'équipe BulleUp
+                """,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user.email],
+                fail_silently=True,
+            )
+        except Exception as e:
+            print(f"Erreur lors de l'envoi de l'email : {e}")
+
+        return Response(
+            {"message": "Mot de passe modifié avec succès. Un email de confirmation a été envoyé."},
+            status=status.HTTP_200_OK
+        )
 
     @action(detail=True, methods=['post'], permission_classes=[IsAuthenticated])
     def add_follower(self, request, pk=None):
@@ -150,8 +284,6 @@ class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
             if not loan_id:
                 return Response({"error": "loan_id est requis"},
                               status=status.HTTP_400_BAD_REQUEST)
-
-            # Vérifier que le prêt existe et appartient à l'utilisateur connecté
             loan = Loan.objects.get(pk=loan_id, user=request.user)
             comic_book = loan.comic_book
             loan.delete()
