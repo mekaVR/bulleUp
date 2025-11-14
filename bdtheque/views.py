@@ -8,10 +8,13 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+import logging
 
 from authentication.models import User
 from .models import *
 from .serializers import *
+
+logger = logging.getLogger(__name__)
 
 class MultipleSerializerMixin:
     detail_serializer_class = None
@@ -196,6 +199,128 @@ class UsersViewSet(MultipleSerializerMixin, viewsets.ModelViewSet):
 
         return Response({"message": f"Vous ne suivez plus {user_to_remove.username}"},
                         status=status.HTTP_200_OK)
+
+    # =========================================================================
+    # ENDPOINT SUPPRESSION DE COMPTE : DELETE /api/users/delete-account/
+    # =========================================================================
+
+    @action(
+        detail=False,
+        methods=['delete'],
+        permission_classes=[IsAuthenticated],
+        url_path='delete-account'
+    )
+    def delete_account(self, request):
+        """
+        Permet à l'utilisateur de supprimer son propre compte.
+
+        ENDPOINT : DELETE /api/users/delete-account/
+
+        BODY :
+        {
+            "password": "mot_de_passe_actuel"
+        }
+
+        SÉCURITÉ :
+        ---------
+        1. Authentification JWT requise
+        2. Confirmation du mot de passe obligatoire
+        3. Email de notification envoyé
+        4. Suppression en cascade automatique :
+           - Collection de BDs
+           - Wishlist
+           - Reviews
+           - Prêts
+           - Follows
+           - Avatar (via django-cleanup)
+
+        CONCEPTS REST :
+        ------------
+        - DELETE : Suppression d'une ressource
+        - 200 OK : Suppression réussie
+        - 400 Bad Request : Mot de passe manquant
+        - 401 Unauthorized : Mot de passe incorrect
+
+        EXEMPLES :
+        ---------
+        DELETE /api/users/delete-account/
+        Headers: Authorization: Bearer <token>
+        Body: {"password": "mon_mot_de_passe"}
+
+        IMPORTANT :
+        ----------
+        Cette action est IRRÉVERSIBLE. Toutes les données de l'utilisateur
+        seront définitivement supprimées.
+        """
+        user = request.user
+        password = request.data.get('password')
+
+        # Validation 1 : Le mot de passe est requis
+        if not password:
+            return Response(
+                {"error": "Le mot de passe est requis pour confirmer la suppression"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Validation 2 : Vérifier que le mot de passe est correct
+        if not check_password(password, user.password):
+            return Response(
+                {"error": "Mot de passe incorrect"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Sauvegarder les infos pour l'email (avant suppression)
+        username = user.username
+        email = user.email
+        user_id = user.id
+
+        # Envoyer un email de confirmation
+        try:
+            send_mail(
+                subject='Compte supprimé - BulleUp',
+                message=f"""
+Bonjour {username},
+
+Votre compte BulleUp a été supprimé avec succès.
+
+Toutes vos données ont été effacées :
+- Collection de bandes dessinées
+- Liste de souhaits
+- Avis et critiques
+- Prêts en cours
+- Abonnements
+
+Si vous n'êtes pas à l'origine de cette suppression, contactez immédiatement notre support à support@bulleup.com.
+
+Nous espérons vous revoir bientôt !
+
+Cordialement,
+L'équipe BulleUp
+                """,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[email],
+                fail_silently=True,  # Ne pas bloquer si l'email échoue
+            )
+        except Exception as e:
+            # Logger l'erreur mais ne pas empêcher la suppression
+            logger.error(f"Erreur lors de l'envoi de l'email de suppression de compte : {e}")
+
+        # Log pour traçabilité (avant suppression)
+        logger.warning(
+            f"SUPPRESSION DE COMPTE : {username} (ID: {user_id}, Email: {email})"
+        )
+
+        # Supprimer l'utilisateur
+        # Django supprime automatiquement toutes les données liées (CASCADE)
+        # django-cleanup supprime automatiquement l'avatar
+        user.delete()
+
+        return Response(
+            {
+                "message": "Votre compte a été supprimé avec succès. Nous espérons vous revoir bientôt !"
+            },
+            status=status.HTTP_200_OK
+        )
 
 
 class ComicBookViewSet(MultipleSerializerMixin, viewsets.ReadOnlyModelViewSet):
