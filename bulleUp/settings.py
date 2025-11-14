@@ -43,11 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # Ajouté pour gérer les CORS
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
     'authentication',
     'bdtheque',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -156,24 +157,25 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
 }
 
-# Email configuration
-# Pour le développement, utilise la console (affiche les emails dans le terminal)
-# En production, configurer avec SMTP (Gmail, SendGrid, etc.)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@bulleup.com'
 
-# Password reset token validity (en secondes)
-# 3600 = 1 heure (plus sécurisé que le défaut de 3 jours)
 PASSWORD_RESET_TIMEOUT = 3600
 
-# Configuration CORS (pour permettre les requêtes depuis le frontend React Native)
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8081",  # Expo dev server
-    "http://192.168.1.10:8081",  # Votre IP locale
-    "exp://192.168.1.10:8081",  # Expo protocol
+    "http://localhost:8081",
+    "http://192.168.1.10:8081",
+    "exp://192.168.1.10:8081",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
-# En développement, vous pouvez temporairement utiliser (à ne PAS garder en production):
-# CORS_ALLOW_ALL_ORIGINS = True
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
+try:
+    from pillow_heif import register_heif_opener
+    register_heif_opener()
+except ImportError:
+    pass
