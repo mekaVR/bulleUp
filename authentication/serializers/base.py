@@ -69,7 +69,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
     def validate_email(self, value):
         """Vérifie que l'email existe dans la base de données"""
         if not User.objects.filter(email=value).exists():
-            raise serializers.ValidationError({"error": "Aucun compte n'est associé à cet e-mail."})
+            raise serializers.ValidationError("Aucun compte n'est associé à cet e-mail.")
         return value
 
     def save(self):

@@ -9,7 +9,5 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             return super().validate(attrs)
         except AuthenticationFailed:
             raise AuthenticationFailed(
-                detail=_({
-                    "error": "L'adresse e-mail ou le mot de passe que vous avez saisi est incorrect."
-                })
+                _("L'adresse e-mail ou le mot de passe que vous avez saisi est incorrect.")
             )
